@@ -1,11 +1,30 @@
 {
-  "buildCommand": "cd appointment-booking-frontend && npm run build",
-  "outputDirectory": "appointment-booking-frontend/dist",
-  "installCommand": "cd appointment-booking-frontend && npm install",
-  "rewrites": [
+  "functions": {
+    "appointment-booking-api/src/main.py": {
+      "runtime": "python3.9"
+    }
+  },
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "appointment-booking-frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "../appointment-booking-api/src/static"
+      }
+    },
+    {
+      "src": "appointment-booking-api/src/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/appointment-booking-api/src/main.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/appointment-booking-api/src/static/$1"
     }
   ]
 }
