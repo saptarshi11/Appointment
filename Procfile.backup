@@ -1,5 +1,5 @@
 # Option 1: Use root-level wsgi.py with gunicorn
-web: gunicorn wsgi:app --host 0.0.0.0 --port $PORT
+web: gunicorn wsgi:app --bind 0.0.0.0:$PORT
 
 # Option 2: Use Python startup script  
 # web: python run_app.py
@@ -8,4 +8,4 @@ web: gunicorn wsgi:app --host 0.0.0.0 --port $PORT
 # web: cd appointment-booking-api/src && python main.py
 
 # Option 4: Try changing directory first
-# web: cd appointment-booking-api/src && gunicorn wsgi:app --host 0.0.0.0 --port $PORT
+# web: cd appointment-booking-api/src && gunicorn wsgi:app --bind 0.0.0.0:$PORT
