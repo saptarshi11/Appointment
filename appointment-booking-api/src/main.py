@@ -41,32 +41,55 @@ def health_check():
     return {"status": "OK", "message": "API is running"}
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'database', 'app.db')}"
+# Create database directory if it doesn't exist
+db_dir = os.path.join(os.path.dirname(__file__), 'database')
+os.makedirs(db_dir, exist_ok=True)
+
+# Use environment variable for database URL if available, otherwise use SQLite
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(db_dir, 'app.db')}"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 def seed_admin_user():
     """Seed admin user if it doesn't exist"""
-    admin_email = 'admin@example.com'
-    admin_password = 'Passw0rd!'
-    
-    existing_admin = User.query.filter_by(email=admin_email).first()
-    if not existing_admin:
-        admin_user = User(
-            name='Admin User',
-            email=admin_email,
-            role='admin'
-        )
-        admin_user.set_password(admin_password)
-        db.session.add(admin_user)
-        db.session.commit()
-        print(f"Admin user created: {admin_email}")
-    else:
-        print(f"Admin user already exists: {admin_email}")
+    try:
+        admin_email = 'admin@example.com'
+        admin_password = 'Passw0rd!'
+        
+        existing_admin = User.query.filter_by(email=admin_email).first()
+        if not existing_admin:
+            admin_user = User(
+                name='Admin User',
+                email=admin_email,
+                role='admin'
+            )
+            admin_user.set_password(admin_password)
+            db.session.add(admin_user)
+            db.session.commit()
+            print(f"Admin user created: {admin_email}")
+        else:
+            print(f"Admin user already exists: {admin_email}")
+    except Exception as e:
+        print(f"Error seeding admin user: {e}")
 
-with app.app_context():
-    db.create_all()
-    seed_admin_user()
+# Initialize database on startup
+def init_database():
+    """Initialize database tables and seed data"""
+    try:
+        with app.app_context():
+            db.create_all()
+            seed_admin_user()
+            print("Database initialized successfully")
+    except Exception as e:
+        print(f"Database initialization error: {e}")
+
+# Call database initialization
+init_database()
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

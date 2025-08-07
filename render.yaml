@@ -4,7 +4,6 @@ services:
     env: python
     buildCommand: cd appointment-booking-frontend && npm install && npm run build
     startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT
-    rootDir: appointment-booking-api/src
     envVars:
       - key: FLASK_ENV
         value: production
