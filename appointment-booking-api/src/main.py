@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request
 try:
     from flask_cors import CORS
 except ImportError:
@@ -24,6 +24,11 @@ app.config['SECRET_KEY'] = 'asdf#FGSgvasgf$5$WGT'
 
 # Enable CORS for all routes
 CORS(app, origins="*")
+
+# Add request logging for debugging
+@app.before_request
+def log_request_info():
+    print(f"Request: {request.method} {request.url}")
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api')
@@ -93,5 +98,7 @@ def serve(path):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') != 'production'
+    app.run(host='0.0.0.0', port=port, debug=debug)
 
