@@ -1,4 +1,7 @@
 {
+  "buildCommand": "cd appointment-booking-frontend && npm run build",
+  "outputDirectory": "appointment-booking-frontend/dist",
+  "installCommand": "cd appointment-booking-frontend && npm install",
   "rewrites": [
     {
       "source": "/(.*)",
