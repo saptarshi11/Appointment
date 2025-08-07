@@ -1,0 +1,184 @@
+import { useState, useEffect } from 'react'
+
+const AdminDashboard = ({ user, onLogout }) => {
+  const [bookings, setBookings] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const fetchAllBookings = async () => {
+    setLoading(true)
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch('/api/all-bookings', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      const data = await response.json()
+      
+      if (response.ok) {
+        setBookings(data)
+      } else {
+        setError(data.error?.message || 'Failed to fetch bookings')
+      }
+    } catch (error) {
+      setError('Network error. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchAllBookings()
+  }, [])
+
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString)
+    return {
+      date: date.toLocaleDateString(),
+      time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+  }
+
+  const groupBookingsByDate = (bookings) => {
+    const grouped = {}
+    bookings.forEach(booking => {
+      const { date } = formatDateTime(booking.slot_start)
+      if (!grouped[date]) {
+        grouped[date] = []
+      }
+      grouped[date].push(booking)
+    })
+    return grouped
+  }
+
+  const groupedBookings = groupBookingsByDate(bookings)
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-3">
+              <div className="h-8 w-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                A
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold">Admin Dashboard</h1>
+                <p className="text-sm text-gray-600">Welcome, {user.name}</p>
+              </div>
+            </div>
+            <button
+              onClick={onLogout}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Alerts */}
+        {error && (
+          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            {error}
+          </div>
+        )}
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center space-x-3">
+              <span className="text-2xl">📅</span>
+              <div>
+                <p className="text-2xl font-bold">{bookings.length}</p>
+                <p className="text-sm text-gray-600">Total Bookings</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center space-x-3">
+              <span className="text-2xl">👥</span>
+              <div>
+                <p className="text-2xl font-bold">{new Set(bookings.map(b => b.user_id)).size}</p>
+                <p className="text-sm text-gray-600">Unique Patients</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center space-x-3">
+              <span className="text-2xl">🕐</span>
+              <div>
+                <p className="text-2xl font-bold">{Object.keys(groupedBookings).length}</p>
+                <p className="text-sm text-gray-600">Days with Bookings</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* All Bookings */}
+        <div className="bg-white rounded-lg shadow-md">
+          <div className="p-6 border-b">
+            <h2 className="text-lg font-semibold flex items-center space-x-2">
+              <span>📅</span>
+              <span>All Bookings</span>
+            </h2>
+            <p className="text-gray-600 mt-1">
+              View all patient appointments
+            </p>
+          </div>
+          <div className="p-6">
+            {loading ? (
+              <div className="text-center py-8">
+                <p>Loading bookings...</p>
+              </div>
+            ) : bookings.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">No bookings found</p>
+            ) : (
+              <div className="space-y-6">
+                {Object.entries(groupedBookings).map(([date, dayBookings]) => (
+                  <div key={date}>
+                    <h3 className="font-semibold text-lg mb-3 text-gray-800">{date}</h3>
+                    <div className="space-y-2">
+                      {dayBookings.map((booking) => {
+                        const { time } = formatDateTime(booking.slot_start)
+                        return (
+                          <div key={booking.id} className="flex items-center justify-between p-4 border rounded-lg bg-white">
+                            <div className="flex items-center space-x-4">
+                              <span className="text-gray-400">🕐</span>
+                              <div>
+                                <p className="font-medium">{time}</p>
+                                <p className="text-sm text-gray-600">
+                                  {booking.user_name} ({booking.user_email})
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <span className="px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs">
+                                Confirmed
+                              </span>
+                              <p className="text-xs text-gray-500">
+                                Booked: {formatDateTime(booking.created_at).date}
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default AdminDashboard
+
