@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "dist",
+    outDir: "../appointment-booking-api/src/static",
     emptyOutDir: true,
   },
   server: {

@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: appointment-booking-api
+    name: appointment-booking-fullstack
     env: python
-    rootDir: appointment-booking-api/src
-    buildCommand: ""
+    buildCommand: cd appointment-booking-frontend && npm install && npm run build
     startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT
+    rootDir: appointment-booking-api/src
     envVars:
       - key: FLASK_ENV
         value: production

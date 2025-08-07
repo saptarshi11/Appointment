@@ -1,17 +1,11 @@
-// API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// API Configuration for single deployment
+// In single deployment, API calls can use relative URLs
+const API_BASE_URL = '';
 
 // Helper function to build API URLs
 export const getApiUrl = (endpoint) => {
-  // Remove leading slash if present
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-  const url = `${API_BASE_URL}/${cleanEndpoint}`;
-  
-  // Debug logging (remove in production)
-  console.log(`API Call: ${url}`);
-  console.log(`VITE_API_URL: ${import.meta.env.VITE_API_URL}`);
-  
-  return url;
+  // For single deployment, just return the endpoint as-is
+  return endpoint;
 };
 
 // Export the base URL for direct use
