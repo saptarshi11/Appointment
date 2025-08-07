@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getApiUrl } from '../config/api'
 
 const AdminDashboard = ({ user, onLogout }) => {
   const [bookings, setBookings] = useState([])
@@ -10,7 +11,7 @@ const AdminDashboard = ({ user, onLogout }) => {
     setLoading(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/all-bookings', {
+      const response = await fetch(getApiUrl('/api/all-bookings'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -39,7 +40,7 @@ const AdminDashboard = ({ user, onLogout }) => {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`/api/cancel/${bookingId}`, {
+      const response = await fetch(getApiUrl(`/api/cancel/${bookingId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

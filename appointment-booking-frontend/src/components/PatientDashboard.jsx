@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getApiUrl } from '../config/api'
 
 const PatientDashboard = ({ user, onLogout }) => {
   const [slots, setSlots] = useState([])
@@ -9,7 +10,7 @@ const PatientDashboard = ({ user, onLogout }) => {
 
   const fetchSlots = async () => {
     try {
-      const response = await fetch('/api/slots')
+      const response = await fetch(getApiUrl('/api/slots'))
       const data = await response.json()
       
       if (response.ok) {
@@ -25,7 +26,7 @@ const PatientDashboard = ({ user, onLogout }) => {
   const fetchBookings = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/my-bookings', {
+      const response = await fetch(getApiUrl('/api/my-bookings'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -54,7 +55,7 @@ const PatientDashboard = ({ user, onLogout }) => {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/book', {
+      const response = await fetch(getApiUrl('/api/book'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ const PatientDashboard = ({ user, onLogout }) => {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`/api/cancel/${bookingId}`, {
+      const response = await fetch(getApiUrl(`/api/cancel/${bookingId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

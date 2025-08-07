@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getApiUrl } from '../config/api'
 
 const Register = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const Register = ({ onLogin }) => {
     setError('')
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch(getApiUrl('/api/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ const Register = ({ onLogin }) => {
 
       if (response.ok) {
         // Auto-login after successful registration
-        const loginResponse = await fetch('/api/login', {
+        const loginResponse = await fetch(getApiUrl('/api/login'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
