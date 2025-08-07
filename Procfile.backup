@@ -1,0 +1,5 @@
+# Primary option: Use gunicorn (production WSGI server)
+web: cd appointment-booking-api/src && gunicorn wsgi:app --host 0.0.0.0 --port $PORT
+
+# Fallback option: Use Flask development server (comment above and uncomment below if gunicorn fails)
+# web: cd appointment-booking-api/src && python main.py

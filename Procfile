@@ -1,1 +1,1 @@
-web: cd appointment-booking-api/src && python main.py
+web: cd appointment-booking-api/src && gunicorn wsgi:app --host 0.0.0.0 --port $PORT
