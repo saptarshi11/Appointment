@@ -196,8 +196,5 @@ An admin user is automatically created on first run:
 - SQL injection prevention
 
 
-## Test Credentials
 
-- **Patient**: patient@example.com / Passw0rd!
-- **Admin**: admin@example.com / Passw0rd!
 
