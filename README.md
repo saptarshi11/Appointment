@@ -45,6 +45,11 @@ appointment-booking-frontend/
 
 ## Quick Start
 
+### Prerequisites
+- Python 3.8+
+- Node.js 16+
+- npm
+
 ### Option 1: Use the Main Script (Recommended)
 ```powershell
 # Run the main management script
@@ -98,6 +103,27 @@ python main.py
 - **Patient**: patient@example.com / Passw0rd!
 - **Admin**: admin@example.com / Passw0rd!
 
+## API Endpoints
+
+- `POST /api/register` - User registration
+- `POST /api/login` - User authentication
+- `GET /api/slots` - Get available appointment slots
+- `POST /api/book` - Book an appointment slot
+- `GET /api/my-bookings` - Get patient's bookings (requires patient auth)
+- `GET /api/all-bookings` - Get all bookings (requires admin auth)
+
+## Features
+
+-  User registration and authentication
+-  Role-based access control (Patient/Admin)
+-  JWT token-based authentication
+-  Appointment slot booking with double-booking prevention
+-  Patient dashboard to view and book appointments
+-  Admin dashboard to view all bookings
+-  Responsive design with Tailwind CSS
+-  SQLite database with proper constraints
+- CORS support for API access
+
 ## Development Workflow
 
 ### Frontend Development
@@ -115,15 +141,6 @@ cd appointment-booking-api
 cd src
 python main.py
 ```
-
-## API Endpoints
-
-- `POST /api/register` - User registration
-- `POST /api/login` - User authentication
-- `GET /api/slots` - Get available appointment slots
-- `POST /api/book` - Book an appointment slot
-- `GET /api/my-bookings` - Get patient's bookings (requires patient auth)
-- `GET /api/all-bookings` - Get all bookings (requires admin auth)
 
 ## Build Configuration
 
@@ -160,143 +177,6 @@ The frontend is configured to build directly into the API's static directory:
 - Proper HTTP status codes
 - Client-side error display in UI
 
-## Deployment Notes
-
-For production deployment:
-1. Build frontend: `npm run build` in frontend directory
-2. Deploy API with built static files
-3. Use production WSGI server (Gunicorn)
-4. Configure production database (PostgreSQL)
-5. Set secure JWT secret key
-6. Configure HTTPS and CORS properly
-
-## Security Features
-
-- bcrypt password hashing
-- JWT token authentication
-- Role-based access control
-- Input validation and sanitization
-- CORS configuration
-- SQL injection prevention
-
-## Future Improvements
-
-- Email notifications for bookings
-- Booking cancellation functionality
-- Time zone support
-- Enhanced security (rate limiting, refresh tokens)
-- Comprehensive testing suite
-- Docker containerization
-
-```
-
-## Quick Start
-
-### Prerequisites
-- Python 3.8+
-- Node.js 16+
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd appointment-booking-system
-   ```
-
-2. **Install Python dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Install Node.js dependencies**
-   ```bash
-   npm install
-   ```
-
-### Running the Application
-
-#### Development Mode (Frontend + Backend separately)
-
-1. **Start the Flask backend**
-   ```bash
-   python main.py
-   ```
-   Backend runs at: http://localhost:5000
-
-2. **Start the React frontend** (in another terminal)
-   ```bash
-   npm run dev
-   ```
-   Frontend runs at: http://localhost:5173
-
-#### Production Mode (Unified)
-
-1. **Build the React frontend**
-   ```bash
-   npm run build
-   ```
-
-2. **Start the Flask application**
-   ```bash
-   python main.py
-   ```
-   Full application runs at: http://localhost:5000
-
-#### Quick Production Start
-```bash
-npm run start:full
-```
-
-## Test Credentials
-
-- **Patient**: patient@example.com / Passw0rd!
-- **Admin**: admin@example.com / Passw0rd!
-
-## API Endpoints
-
-- `POST /api/register` - User registration
-- `POST /api/login` - User authentication
-- `GET /api/slots` - Get available appointment slots
-- `POST /api/book` - Book an appointment slot
-- `GET /api/my-bookings` - Get patient's bookings (requires patient auth)
-- `GET /api/all-bookings` - Get all bookings (requires admin auth)
-
-## Features
-
-- ✅ User registration and authentication
-- ✅ Role-based access control (Patient/Admin)
-- ✅ JWT token-based authentication
-- ✅ Appointment slot booking with double-booking prevention
-- ✅ Patient dashboard to view and book appointments
-- ✅ Admin dashboard to view all bookings
-- ✅ Responsive design with Tailwind CSS
-- ✅ SQLite database with proper constraints
-- ✅ CORS support for API access
-
-## Development
-
-### Backend Development
-The Flask backend is located in `main.py` and the `src/` directory. Key files:
-
-- `src/models/user.py` - Database models
-- `src/routes/` - API route handlers
-- `src/utils/auth.py` - Authentication middleware
-
-### Frontend Development
-The React frontend source is in `src/` directory alongside backend code:
-
-- `src/components/` - React components
-- `src/main.jsx` - React entry point
-- `src/index.css` - Global styles
-
-### Building for Production
-```bash
-npm run build
-```
-This builds the React app into the `static/` directory which is served by Flask.
-
 ## Database
 
 The application uses SQLite for simplicity. The database is automatically created at `database/app.db` when you first run the application.
@@ -308,23 +188,16 @@ An admin user is automatically created on first run:
 
 ## Security Features
 
-- Password hashing with bcrypt
+- bcrypt password hashing
 - JWT token authentication
 - Role-based access control
-- Input validation
-- SQL injection prevention
+- Input validation and sanitization
 - CORS configuration
+- SQL injection prevention
 
-## Deployment
 
-For production deployment:
+## Test Credentials
 
-1. Build the frontend: `npm run build`
-2. Use a production WSGI server like Gunicorn
-3. Configure environment variables
-4. Use PostgreSQL instead of SQLite
-5. Set up HTTPS and proper CORS origins
+- **Patient**: patient@example.com / Passw0rd!
+- **Admin**: admin@example.com / Passw0rd!
 
-## License
-
-MIT License
