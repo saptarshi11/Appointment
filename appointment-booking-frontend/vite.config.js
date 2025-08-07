@@ -11,13 +11,15 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../appointment-booking-api/src/static",
+    outDir: "dist",
     emptyOutDir: true,
   },
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: process.env.NODE_ENV === 'production' 
+          ? "https://your-backend-url.vercel.app" 
+          : "http://localhost:5000",
         changeOrigin: true,
       },
     },
